@@ -23,7 +23,7 @@ class MockSdbMicroscopeClient:
         self.patterning = Patterning(self)
         self._connected = False
 
-    def connect(self, ip=None, port=None):
+    def connect(self, ip: Optional[str]=None, port: Optional[str]=None):
         print(f'MockSdbMicroscopeClient mock-connecting to {ip}:{port}')
         self._connected = True
 
