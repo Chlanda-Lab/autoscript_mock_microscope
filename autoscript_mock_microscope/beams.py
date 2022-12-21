@@ -15,6 +15,7 @@ class Beam:
         self._device = device
         self.beam_shift = LimitValue(Point(x=0, y=0))
         self.horizontal_field_width = LimitValue(500e-6, limits=(1e-9, 5e-3))
+        self.resolution = ListValue('3072x2048', available_values=['768x512', '1536x1024', '3072x2048', '6144x4096'])
         self.scanning = Scanning()
         self.stigmator = LimitValue(Point(x=0, y=0), limits=None)
         self.working_distance = LimitValue(7e-6, limits=(1e-3, 1e-1))
