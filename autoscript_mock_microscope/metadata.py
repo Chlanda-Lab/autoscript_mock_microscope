@@ -74,8 +74,8 @@ def grab_frame_settings(microscope, settings: Optional[GrabFrameSettings]=None):
         resolution = settings.resolution
     else:
         beam, _, _ = active_beam_and_name(microscope)
-        dwell_time = beam.scanning.dwell_time.value,
-        resolution = beam.resolution
+        dwell_time = beam.scanning.dwell_time.value
+        resolution = beam.resolution.value
     return GrabFrameSettings(resolution=resolution, dwell_time=dwell_time)
 
 
