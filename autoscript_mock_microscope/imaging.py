@@ -1,8 +1,12 @@
-from autoscript_sdb_microscope_client.structures import GrabFrameSettings, AdornedImage
-from autoscript_sdb_microscope_client.enumerations import ImagingDevice
 from typing import Optional
+
 import numpy as np
+from autoscript_sdb_microscope_client.enumerations import ImagingDevice
+from autoscript_sdb_microscope_client.structures import GrabFrameSettings, AdornedImage
+from skimage import draw
+
 from .metadata import make_metadata, grab_frame_settings
+
 
 class ImageView:
     def __init__(self, microscope, device: int):
@@ -16,7 +20,12 @@ class ImageView:
         resolution_x, resolution_y = int(resolution_x), int(resolution_y)
         meta = make_metadata(self._microscope, settings=settings)
         dtype = np.uint8 if settings.bit_depth == 8 else np.uint16
-        data = np.ones((resolution_y, resolution_x), dtype=dtype)
+        # Generate image data
+        data = np.ones((resolution_y, resolution_x), dtype=dtype) * 255
+        rect_coords = draw.rectangle((resolution_y // 10, resolution_x // 10),
+                                     (resolution_y // 10 * 9, resolution_x // 10 * 9))
+        data[tuple(rect_coords)] = 0
+        # Store and return
         self._last_image = AdornedImage(data=data, metadata=meta)
         return self._last_image
 
