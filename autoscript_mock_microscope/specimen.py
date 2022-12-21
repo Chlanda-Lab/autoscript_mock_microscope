@@ -12,7 +12,7 @@ class Stage:
 
     def __init__(self, microscope):
         self._microcscope = microscope
-        self._current_position = StagePosition(x=10e-6, y=10e-6, z=7e-6, r=radians(77), t=radians(45))
+        self._current_position = StagePosition(x=10e-3, y=10e-3, z=7e-3, r=radians(77), t=radians(45))
         self._coordinate_system = CoordinateSystem.SPECIMEN
 
     def absolute_move(self, stage_position: StagePosition):
