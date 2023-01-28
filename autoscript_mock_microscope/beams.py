@@ -1,12 +1,15 @@
-from autoscript_sdb_microscope_client.structures import Point
-from autoscript_sdb_microscope_client.enumerations import ImagingDevice
 import math
+
+from autoscript_sdb_microscope_client.enumerations import ImagingDevice
+from autoscript_sdb_microscope_client.structures import Point
+
 from .values import LimitValue, ListValue
+
 
 class Scanning:
     def __init__(self):
         self.dwell_time = LimitValue(100e-9, limits=(0, 1))
-        self.rotation = LimitValue(initial_value=0.0, limits=(0.0, 2*math.pi))
+        self.rotation = LimitValue(initial_value=0.0, limits=(0.0, 2 * math.pi))
         self.resolution = ListValue('768x512', available_values=['768x512', '1536x1024', '3072x2048', '6144x4096'])
 
 class Beam:
@@ -15,7 +18,6 @@ class Beam:
         self._device = device
         self.beam_shift = LimitValue(Point(x=0, y=0))
         self.horizontal_field_width = LimitValue(500e-6, limits=(1e-9, 5e-3))
-        self.resolution = ListValue('3072x2048', available_values=['768x512', '1536x1024', '3072x2048', '6144x4096'])
         self.scanning = Scanning()
         self.stigmator = LimitValue(Point(x=0, y=0), limits=None)
         self.working_distance = LimitValue(7e-6, limits=(1e-3, 1e-1))

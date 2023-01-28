@@ -1,20 +1,23 @@
-from autoscript_sdb_microscope_client.structures import *
-from math import radians
 from .beams import *
-from .imaging import *
 from .gas import *
-from .specimen import *
+from .imaging import *
 from .patterning import *
+from .specimen import *
+
+log = logging.getLogger(__name__)
+
 
 class AutoFunctions:
     def __init__(self, microscope: 'MockSdbMicroscopeClient'):
         self._microscope = microscope
 
     def run_auto_cb(self):
-        print('Running mock auto-cb')
+        log.debug('Running mock auto-cb')
+
 
 class MockSdbMicroscopeClient:
     def __init__(self):
+        log.debug('Initializing MockSdbMicroscopeClient')
         self.auto_functions = AutoFunctions(self)
         self.specimen = Specimen(self)
         self.gas = Gas(self)
@@ -24,10 +27,10 @@ class MockSdbMicroscopeClient:
         self._connected = False
 
     def connect(self, ip: Optional[str]=None, port: Optional[str]=None):
-        print(f'MockSdbMicroscopeClient mock-connecting to {ip}:{port}')
+        log.debug(f'MockSdbMicroscopeClient mock-connecting to {ip}:{port}')
         self._connected = True
 
     def disconnect(self):
-        print(f'MockSdbMicroscopeClient mock-disconnecting')
+        log.debug('MockSdbMicroscopeClient mock-disconnecting')
         self._connected = False
 

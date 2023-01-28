@@ -1,3 +1,4 @@
+import logging
 from typing import Optional
 
 import numpy as np
@@ -7,6 +8,7 @@ from skimage import draw
 
 from .metadata import make_metadata, grab_frame_settings
 
+log = logging.getLogger(__name__)
 
 class ImageView:
     def __init__(self, microscope, device: int):
@@ -15,9 +17,11 @@ class ImageView:
         self._last_image = None
 
     def grab_frame(self, settings: Optional[GrabFrameSettings]=None):
+        log.debug(f'grab_frame: {settings}')
         settings = grab_frame_settings(self._microscope, settings)
         resolution_x, resolution_y = settings.resolution.split('x')
         resolution_x, resolution_y = int(resolution_x), int(resolution_y)
+        log.debug(f'grab_frame: resolution = {resolution_x}, {resolution_y}')
         meta = make_metadata(self._microscope, settings=settings)
         dtype = np.uint8 if settings.bit_depth == 8 else np.uint16
         # Generate image data
@@ -30,6 +34,7 @@ class ImageView:
         return self._last_image
 
     def get_image(self):
+        log.debug(f'get_image: {self._last_image}')
         return self._last_image
             
 
