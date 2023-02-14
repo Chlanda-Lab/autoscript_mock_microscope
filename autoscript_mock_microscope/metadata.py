@@ -1,9 +1,8 @@
-from autoscript_sdb_microscope_client.structures import *
-from autoscript_sdb_microscope_client.enumerations import ImagingDevice
-from math import radians
-import numpy as np
 from datetime import datetime
 from typing import Optional
+
+from autoscript_sdb_microscope_client.enumerations import ImagingDevice
+from autoscript_sdb_microscope_client.structures import *
 
 metadata_ini_formatstring = '''\
 [User]
@@ -75,7 +74,7 @@ def grab_frame_settings(microscope, settings: Optional[GrabFrameSettings]=None):
     else:
         beam, _, _ = active_beam_and_name(microscope)
         dwell_time = beam.scanning.dwell_time.value
-        resolution = beam.resolution.value
+        resolution = beam.scanning.resolution.value
     return GrabFrameSettings(resolution=resolution, dwell_time=dwell_time)
 
 
