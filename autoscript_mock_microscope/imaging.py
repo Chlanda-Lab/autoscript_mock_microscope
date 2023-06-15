@@ -21,7 +21,7 @@ class ImageView:
         settings = grab_frame_settings(self._microscope, settings)
         resolution_x, resolution_y = settings.resolution.split('x')
         resolution_x, resolution_y = int(resolution_x), int(resolution_y)
-        log.debug(f'grab_frame: resolution = {resolution_x}, {resolution_y}')
+        log.debug(f'grab_frame: resolution = {resolution_y}, {resolution_x}')
         meta = make_metadata(self._microscope, settings=settings)
         dtype = np.uint8 if settings.bit_depth == 8 else np.uint16
         # Generate image data
@@ -29,6 +29,13 @@ class ImageView:
         rect_coords = draw.rectangle((resolution_y // 10, resolution_x // 10),
                                      (resolution_y // 10 * 9, resolution_x // 10 * 9))
         data[tuple(rect_coords)] = 0
+        # Get reduced are, if applicable
+        if settings.reduced_area is not None:
+            rect = settings.reduced_area
+            ymin, xmin = np.ceil(np.multiply(data.shape, (rect.top, rect.left))).astype(int)
+            ymax, xmax = np.floor(np.multiply(data.shape, (rect.top + rect.height, rect.left + rect.width))).astype(int)
+            log.debug(f'reduced area: {settings.reduced_area} -> {ymin}:{ymax}, {xmin}:{xmax}')
+            data = data[ymin:ymax, xmin:xmax].copy()
         # Store and return
         self._last_image = AdornedImage(data=data, metadata=meta)
         return self._last_image

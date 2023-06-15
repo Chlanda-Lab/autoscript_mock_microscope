@@ -2,7 +2,7 @@ from datetime import datetime
 from typing import Optional
 
 from autoscript_sdb_microscope_client.enumerations import ImagingDevice
-from autoscript_sdb_microscope_client.structures import *
+from autoscript_sdb_microscope_client.structures import AdornedImageMetadata, AdornedImageMetadataBinaryResult, GrabFrameSettings, Point
 
 metadata_ini_formatstring = '''\
 [User]
@@ -67,15 +67,17 @@ StageRawTb=0
 '''
 
 
-def grab_frame_settings(microscope, settings: Optional[GrabFrameSettings]=None):
+def grab_frame_settings(microscope, settings: Optional[GrabFrameSettings]=None) -> GrabFrameSettings:
     if settings is not None:
         dwell_time = settings.dwell_time
         resolution = settings.resolution
+        reduced_area = settings.reduced_area
     else:
         beam, _, _ = active_beam_and_name(microscope)
         dwell_time = beam.scanning.dwell_time.value
         resolution = beam.scanning.resolution.value
-    return GrabFrameSettings(resolution=resolution, dwell_time=dwell_time)
+        reduced_area = None
+    return GrabFrameSettings(resolution=resolution, dwell_time=dwell_time, reduced_area=reduced_area)
 
 
 def active_beam_and_name(microscope):
