@@ -12,6 +12,6 @@ setup(
         'tk',
         'numpy',
         'scikit-image',
-        'opencv-python'
+        'opencv-python-headless'
         ],
 )
