@@ -42,6 +42,7 @@ PixelWidth={pix_size}
 PixelHeight={pix_size}
 HorFieldsize={hfw}
 VerFieldsize={vfw}
+Integrate=1
 
 [{scan_str}]
 Dwell={dwell}
