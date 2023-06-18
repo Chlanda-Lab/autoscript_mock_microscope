@@ -42,7 +42,8 @@ PixelWidth={pix_size}
 PixelHeight={pix_size}
 HorFieldsize={hfw}
 VerFieldsize={vfw}
-Integrate=1
+Average=0
+Integrate=0
 
 [{scan_str}]
 Dwell={dwell}
@@ -65,6 +66,12 @@ StageRawZ={stagez}
 StageRawR={stager}
 StageRawT={staget}
 StageRawTb=0
+
+[Image]
+Average=0
+Integrate=0
+ResolutionX={resolution_x}
+ResolutionY={resolution_y}
 '''
 
 
@@ -125,5 +132,7 @@ def make_metadata(
                 vfw=vfw,
                 pix_size=pix_size,
                 wd=beam.working_distance.value,
+                resolution_x=resolution_x,
+                resolution_y=resolution_y,
                 )
             )
