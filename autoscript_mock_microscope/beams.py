@@ -22,6 +22,10 @@ class Beam:
         self.stigmator = LimitValue(Point(x=0, y=0), limits=None)
         self.working_distance = LimitValue(7e-6, limits=(1e-3, 1e-1))
         if device == ImagingDevice.ELECTRON_BEAM:
+            self.high_voltage = LimitValue(30000, limits=(1000, 30000))
+        elif device == ImagingDevice.ION_BEAM:
+            self.high_voltage = LimitValue(5000, limits=(1000, 10000))
+        if device == ImagingDevice.ELECTRON_BEAM:
             self.beam_current = LimitValue(5000, limits=(2000, 10000))
         elif device == ImagingDevice.ION_BEAM:
             self.beam_current = ListValue(1000e-12,
