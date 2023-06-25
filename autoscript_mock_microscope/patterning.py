@@ -60,5 +60,8 @@ class Patterning:
         self._patterns.append(pattern)
         return pattern
 
+    def create_cleaning_cross_section(self, *args, **kwargs) -> 'RectanglePattern':
+        return self.create_rectangle(*args, **kwargs)
+
     def run(self):
         print('Running mock-patterning')
