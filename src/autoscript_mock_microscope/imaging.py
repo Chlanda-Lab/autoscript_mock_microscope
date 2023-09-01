@@ -10,40 +10,51 @@ from .metadata import make_metadata, grab_frame_settings
 
 log = logging.getLogger(__name__)
 
+
 class ImageView:
     def __init__(self, microscope, device: int):
         self._microscope = microscope
         self._device = device
         self._last_image = None
 
-    def grab_frame(self, settings: Optional[GrabFrameSettings]=None):
-        log.debug(f'grab_frame: {settings}')
+    def grab_frame(self, settings: Optional[GrabFrameSettings] = None):
+        log.debug(f"grab_frame: {settings}")
         settings = grab_frame_settings(self._microscope, settings)
-        resolution_x, resolution_y = settings.resolution.split('x')
+        resolution_x, resolution_y = settings.resolution.split("x")
         resolution_x, resolution_y = int(resolution_x), int(resolution_y)
-        log.debug(f'grab_frame: resolution = {resolution_y}, {resolution_x}')
+        log.debug(f"grab_frame: resolution = {resolution_y}, {resolution_x}")
         meta = make_metadata(self._microscope, settings=settings)
         dtype = np.uint8 if settings.bit_depth == 8 else np.uint16
         # Generate image data
         data = np.ones((resolution_y, resolution_x), dtype=dtype) * 255
-        rect_coords = draw.rectangle((resolution_y // 10, resolution_x // 10),
-                                     (resolution_y // 10 * 9, resolution_x // 10 * 9))
+        rect_coords = draw.rectangle(
+            (resolution_y // 10, resolution_x // 10),
+            (resolution_y // 10 * 9, resolution_x // 10 * 9),
+        )
         data[tuple(rect_coords)] = 0
         # Get reduced are, if applicable
         if settings.reduced_area is not None:
             rect = settings.reduced_area
-            ymin, xmin = np.ceil(np.multiply(data.shape, (rect.top, rect.left))).astype(int)
-            ymax, xmax = np.floor(np.multiply(data.shape, (rect.top + rect.height, rect.left + rect.width))).astype(int)
-            log.debug(f'reduced area: {settings.reduced_area} -> {ymin}:{ymax}, {xmin}:{xmax}')
+            ymin, xmin = np.ceil(np.multiply(data.shape, (rect.top, rect.left))).astype(
+                int
+            )
+            ymax, xmax = np.floor(
+                np.multiply(
+                    data.shape, (rect.top + rect.height, rect.left + rect.width)
+                )
+            ).astype(int)
+            log.debug(
+                f"reduced area: {settings.reduced_area} -> {ymin}:{ymax}, {xmin}:{xmax}"
+            )
             data = data[ymin:ymax, xmin:xmax].copy()
         # Store and return
         self._last_image = AdornedImage(data=data, metadata=meta)
         return self._last_image
 
     def get_image(self):
-        log.debug(f'get_image: {self._last_image}')
+        log.debug(f"get_image: {self._last_image}")
         return self._last_image
-            
+
 
 class Imaging:
     def __init__(self, microscope):
@@ -71,9 +82,8 @@ class Imaging:
     def _active_image_view(self):
         return self._views[self.get_active_view()]
 
-    def grab_frame(self, settings: Optional[GrabFrameSettings]=None):
+    def grab_frame(self, settings: Optional[GrabFrameSettings] = None):
         return self._active_image_view().grab_frame(settings)
 
     def get_image(self):
         return self._active_image_view().get_image()
-

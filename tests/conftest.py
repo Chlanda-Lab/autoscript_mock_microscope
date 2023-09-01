@@ -1,7 +1,7 @@
-
 import pytest
 
 from autoscript_mock_microscope import MockSdbMicroscopeClient
+
 
 @pytest.fixture
 def microscope() -> MockSdbMicroscopeClient:
