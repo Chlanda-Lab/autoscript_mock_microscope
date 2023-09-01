@@ -1,7 +1,7 @@
 import pytest
 import math
 
-from autoscript_sdb_microscope_client.structures import AdornedImage, GrabFrameSettings
+from autoscript_sdb_microscope_client.structures import AdornedImage, GrabFrameSettings, Rectangle
 
 
 def test_simple(microscope):
@@ -25,5 +25,18 @@ def test_with_settings(microscope, resolution: str, dwell_time: float):
     assert image.data.shape == (height, width)
 
 
-def test_reduced_area(microscope):
-    pass
+@pytest.mark.parametrize("resolution, rectangle", [
+    ('768x512', Rectangle(0, 0, 0.5, 0.5)),
+    ('1536x1024', Rectangle(0.5, 0.5, 0.5, 0.5)),
+    ('3072x2048', Rectangle(0.5, 0, 0.5, 0.5)),
+    ('6072x4096', Rectangle(0, 0.5, 0.5, 0.5))])
+def test_reduced_area(microscope, resolution, rectangle):
+    settings = GrabFrameSettings(resolution=resolution, reduced_area=rectangle)
+    image = microscope.imaging.grab_frame(settings)
+    assert type(image) is AdornedImage
+    width, height = tuple(map(int, resolution.split('x')))
+    width *= rectangle.width
+    height *= rectangle.height
+    assert image.width == width
+    assert image.height == height
+    assert image.data.shape == (height, width)
