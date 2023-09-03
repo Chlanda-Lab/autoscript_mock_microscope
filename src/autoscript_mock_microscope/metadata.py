@@ -7,6 +7,7 @@ from autoscript_sdb_microscope_client.structures import (
     AdornedImageMetadataBinaryResult,
     GrabFrameSettings,
     Point,
+    Rectangle,
 )
 
 metadata_ini_formatstring = """\
@@ -83,18 +84,23 @@ ResolutionY={resolution_y}
 def grab_frame_settings(
     microscope, settings: Optional[GrabFrameSettings] = None
 ) -> GrabFrameSettings:
-    if settings is not None:
-        dwell_time = settings.dwell_time
-        resolution = settings.resolution
-        reduced_area = settings.reduced_area
+    if settings is None:
+        new_settings = GrabFrameSettings()
     else:
-        beam, _, _ = active_beam_and_name(microscope)
-        dwell_time = beam.scanning.dwell_time.value
-        resolution = beam.scanning.resolution.value
-        reduced_area = None
-    return GrabFrameSettings(
-        resolution=resolution, dwell_time=dwell_time, reduced_area=reduced_area
-    )
+        new_settings = GrabFrameSettings(
+            resolution=settings.resolution,
+            dwell_time=settings.dwell_time,
+            bit_depth=settings.bit_depth,
+            reduced_area=settings.reduced_area,
+        )
+    beam, _, _ = active_beam_and_name(microscope)
+    if new_settings.dwell_time is None:
+        new_settings.dwell_time = beam.scanning.dwell_time.value
+    if new_settings.resolution is None:
+        new_settings.resolution = beam.scanning.resolution.value
+    if new_settings.reduced_area is None:
+        new_settings.reduced_area = Rectangle(left=0, top=0, width=1, height=1)
+    return new_settings
 
 
 def active_beam_and_name(microscope):
@@ -119,9 +125,11 @@ def make_metadata(
     settings = grab_frame_settings(microscope, settings)
     resolution_x, resolution_y = settings.resolution.split("x")
     resolution_x, resolution_y = int(resolution_x), int(resolution_y)
-    hfw = beam.horizontal_field_width.value
+    full_hfw = beam.horizontal_field_width.value 
+    full_vfw = full_hfw * resolution_y / resolution_x
+    hfw = full_hfw * settings.reduced_area.width
+    vfw = full_vfw * settings.reduced_area.height
     pix_size = hfw / resolution_x
-    vfw = pix_size * resolution_y
     binary_result = AdornedImageMetadataBinaryResult(
         bits_per_pixel=settings.bit_depth, pixel_size=Point(x=pix_size, y=pix_size)
     )
