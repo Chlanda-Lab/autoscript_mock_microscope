@@ -44,8 +44,8 @@ EucWD=0.007
 
 [Scan]
 Dwelltime={dwell}
-PixelWidth={pix_size}
-PixelHeight={pix_size}
+PixelWidth={pix_width}
+PixelHeight={pix_height}
 HorFieldsize={hfw}
 VerFieldsize={vfw}
 Average=0
@@ -53,8 +53,8 @@ Integrate=0
 
 [{scan_str}]
 Dwell={dwell}
-PixelWidth={pix_size}
-PixelHeight={pix_size}
+PixelWidth={pix_width}
+PixelHeight={pix_height}
 HorFieldsize={hfw}
 VerFieldsize={vfw}
 
@@ -129,9 +129,10 @@ def make_metadata(
     full_vfw = full_hfw * resolution_y / resolution_x
     hfw = full_hfw * settings.reduced_area.width
     vfw = full_vfw * settings.reduced_area.height
-    pix_size = hfw / resolution_x
+    pix_width = full_hfw / resolution_x
+    pix_height = full_vfw / resolution_y
     binary_result = AdornedImageMetadataBinaryResult(
-        bits_per_pixel=settings.bit_depth, pixel_size=Point(x=pix_size, y=pix_size)
+        bits_per_pixel=settings.bit_depth, pixel_size=Point(x=pix_width, y=pix_height)
     )
     return AdornedImageMetadata(
         binary_result=binary_result,
@@ -148,7 +149,8 @@ def make_metadata(
             dwell=settings.dwell_time,
             hfw=hfw,
             vfw=vfw,
-            pix_size=pix_size,
+            pix_width=pix_width,
+            pix_height=pix_height,
             wd=beam.working_distance.value,
             resolution_x=resolution_x,
             resolution_y=resolution_y,
