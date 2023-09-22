@@ -24,7 +24,7 @@ class Beam:
         if device == ImagingDevice.ELECTRON_BEAM:
             self.high_voltage = LimitValue(30000, limits=(1000, 30000))
         elif device == ImagingDevice.ION_BEAM:
-            self.high_voltage = LimitValue(5000, limits=(1000, 10000))
+            self.high_voltage = LimitValue(30000, limits=(1000, 30000))
         if device == ImagingDevice.ELECTRON_BEAM:
             self.beam_current = LimitValue(5000, limits=(2000, 10000))
         elif device == ImagingDevice.ION_BEAM:
