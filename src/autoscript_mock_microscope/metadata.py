@@ -19,6 +19,7 @@ Type=DualBeam
 EucWD=0.007
 
 [Beam]
+HV={hv}
 BeamShiftX=0
 BeamShiftY=0
 ScanRotation={scan_rotation}
@@ -29,6 +30,8 @@ Scan={scan_str}
 HFW={hfw}
 VFW={vfw}
 WD={wd}
+HV={hv}
+BeamCurrent={beam_current}
 ScanRotation={scan_rotation}
 StageX={stagex}
 StageY={stagey}
@@ -154,5 +157,7 @@ def make_metadata(
             wd=beam.working_distance.value,
             resolution_x=resolution_x,
             resolution_y=resolution_y,
+            hv=beam.high_voltage.value,
+            beam_current=beam.beam_current.value,
         ),
     )
