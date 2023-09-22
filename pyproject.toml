@@ -1,0 +1,30 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "autoscript_mock_microscope"
+description = "Emulate an Aquilos (2)"
+readme = "README.md"
+version = "0.1"
+requires-python = ">=3.6"
+license = {text = "GPL v3"}
+authors = [
+  {email = "moritz.wachsmuth@bioquant.uni-heidelberg.de", name = "Moritz Wachsmuth-Melm"},
+]
+dependencies = [
+    "numpy",
+    "scipy",
+    "scikit-image",
+    "opencv-python-headless",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "black",
+]
+
+[project.urls]
+homepage = "https://github.com/Chlanda-Lab/autoscript_mock_microscope"
+repository = "https://github.com/Chlanda-Lab/autoscript_mock_microscope"
