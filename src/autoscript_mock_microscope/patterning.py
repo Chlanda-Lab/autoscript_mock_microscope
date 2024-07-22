@@ -2,6 +2,7 @@ from autoscript_sdb_microscope_client.enumerations import (
     BeamType,
     PatternScanDirection,
     PatternScanType,
+    PatterningState,
 )
 from random import randint
 from typing import List
@@ -87,3 +88,14 @@ class Patterning:
 
     def run(self):
         print("Running mock-patterning")
+
+    def start(self):
+        print("Starting mock-patterning")
+
+    def stop(self):
+        print("Stopping mock-patterning")
+
+    @property
+    def state(self) -> PatterningState:
+        return PatterningState.IDLE
+
