@@ -86,6 +86,10 @@ class Patterning:
     def create_cleaning_cross_section(self, *args, **kwargs) -> "RectanglePattern":
         return self.create_rectangle(*args, **kwargs)
 
+    def create_regular_cross_section(self, *args, **kwargs) -> "RectanglePattern":
+        return self.create_rectangle(*args, **kwargs)
+
+
     def run(self):
         print("Running mock-patterning")
 
@@ -94,6 +98,12 @@ class Patterning:
 
     def stop(self):
         print("Stopping mock-patterning")
+
+    def pause(self):
+        print("Pausing mock-patterning")
+
+    def resume(self):
+        print("Resuming mock-patterning")
 
     @property
     def state(self) -> PatterningState:
